@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "presenter": "示例汇报人",
+  "expected_slide_count": 2,
+  "max_seconds": 60,
+  "planned_seconds": 50,
+  "forbidden_text": ["［", "请替换", "[Paper title"],
+  "slides": [
+    {
+      "number": 1,
+      "title": "研究问题与方法",
+      "seconds": 30,
+      "cue": "用真实论文的研究对象解释问题",
+      "speech": "这是结构示例，使用时应根据实际论文撰写讲稿，不能作为研究事实。",
+      "source": "示例占位来源，需替换为实际论文页码",
+      "asset_ids": []
+    },
+    {
+      "number": 2,
+      "title": "结论与讨论",
+      "seconds": 20,
+      "cue": "结合实际证据说明研究边界",
+      "speech": "本示例只展示清单结构，实际汇报需要有来源支持的研究发现与局限。",
+      "source": "示例占位来源，需替换为实际论文页码",
+      "asset_ids": []
+    }
+  ]
+}

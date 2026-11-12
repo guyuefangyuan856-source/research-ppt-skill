@@ -1,0 +1,7 @@
+interface:
+  display_name: "Research PPT · 科研组会汇报"
+  short_description: "精读科研论文，沿用参考模板制作汇报幻灯片、原文公式截图与逐页对应讲稿"
+  icon_large: "./assets/preview.png"
+  default_prompt: "使用 $artifact-template-research-ppt，根据提供的论文和模板制作科研汇报 PPT 与逐页讲稿。"
+policy:
+  allow_implicit_invocation: true
