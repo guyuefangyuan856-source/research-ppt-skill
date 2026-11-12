@@ -1,0 +1,3 @@
+# PDF crop helper only. audit_report.py uses the Python standard library.
+pypdfium2>=4.30,<6
+Pillow>=10,<13

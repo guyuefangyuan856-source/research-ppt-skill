@@ -149,6 +149,9 @@ def audit(pptx, script, manifest, assets_manifest=None):
                 fail('asset_provenance', aid+': invalid crop coordinates')
             if type(asset.get('scale')) not in (int, float) or not math.isfinite(asset['scale']) or not 0 < asset['scale'] <= 16:
                 fail('asset_provenance', aid+': invalid render scale')
+    for text in plan.get('forbidden_text', ['［', '请替换', '[Paper title']):
+        if text and text in markdown:
+            fail('residual_text', 'Unexpected placeholder or stale reference text in Markdown: '+text)
     total_seconds = 0
     for index, page in enumerate(pages):
         number = index + 1
@@ -177,7 +180,8 @@ def audit(pptx, script, manifest, assets_manifest=None):
         for key in ('title', 'cue', 'speech', 'source'):
             if norm(page.get(key, '')) not in norm(slide['notes']):
                 fail('notes_mismatch', key+' absent from the corresponding notes', number)
-        if str(seconds)+'秒' not in slide['notes']:
+        time_pattern = r'(?<![\d.])'+re.escape(str(seconds))+r'秒(?!\d)'
+        if not re.search(time_pattern, slide['notes']):
             fail('notes_time', 'Page seconds absent from notes', number)
         if index < len(matches):
             if int(matches[index].group(1)) != number or norm(matches[index].group(2)) != norm(page.get('title', '')):
@@ -185,7 +189,7 @@ def audit(pptx, script, manifest, assets_manifest=None):
             for key in ('cue', 'speech', 'source'):
                 if norm(page.get(key, '')) not in norm(sections[index]):
                     fail('script_mismatch', key+' absent from the corresponding Markdown section', number)
-            if str(seconds)+'秒' not in sections[index]:
+            if not re.search(time_pattern, sections[index]):
                 fail('script_time', 'Page seconds absent from Markdown section', number)
         for aid in declared_assets:
             if aid not in asset_map:
@@ -240,6 +244,8 @@ def main():
             if args.output.resolve() in inputs:
                 raise ValueError('Report output must not overwrite an input')
             result = audit(args.pptx, args.script, args.manifest, args.assets_manifest)
+            if str(args.output.resolve()) in result['fingerprints']:
+                raise ValueError('Report output must not overwrite a source or asset')
             args.output.parent.mkdir(parents=True, exist_ok=True)
             args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2, allow_nan=False)+'\n', encoding='utf-8')
     except (ValueError, OSError, KeyError, TypeError, BadZipFile, ET.ParseError) as error:
