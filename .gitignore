@@ -1,0 +1,11 @@
+.work/
+dist/
+output/
+node_modules/
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.env.*
+*.log
+.artifact-template-write-lock/
